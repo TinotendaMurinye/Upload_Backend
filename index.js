@@ -1,12 +1,12 @@
-const express = require("express"); // Import express
-const multer = require("multer"); // Import multer
-const path = require("path"); // Import path
-const fs = require("fs"); // Import fs
-const cors = require("cors"); // Import cors
-const https = require("https"); // Import https
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const cors = require("cors");
+const https = require("https");
 
-const app = express(); // Create an instance of express
-const PORT = process.env.PORT || 3001; // Set port
+const app = express();
+const PORT = process.env.PORT || 3001;
 
 // SSL options using Let's Encrypt certificates
 const sslOptions = {
@@ -21,11 +21,11 @@ app.use(cors()); // Enable all CORS requests
 const createStorage = (uploadDir) => {
   return multer.diskStorage({
     destination: (req, file, cb) => {
-      fs.mkdirSync(uploadDir, { recursive: true }); // Create directory if it doesn't exist
-      cb(null, uploadDir); // Set destination
+      fs.mkdirSync(uploadDir, { recursive: true });
+      cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); // Save file with timestamp
+      cb(null, Date.now() + path.extname(file.originalname));
     },
   });
 };
@@ -49,15 +49,30 @@ app.post("/uploads", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
-  const filePath = path.join("uploads", req.file.filename); // Get the file path
-  res.json({ path: `${filePath}` }); // Return the file path as JSON
+  const filePath = path.join("uploads", req.file.filename);
+  res.json({ path: `${filePath}` });
 });
 
-// Other upload routes...
+// Example route for uploading documents
+app.post("/documents", uploadDocuments.single("document"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send("No document uploaded.");
+  }
+  const filePath = path.join("Documents", req.file.filename);
+  res.json({ path: `${filePath}` });
+});
 
 // Define a route for testing
 app.get("/", (req, res) => {
-  res.send("Hello, World!"); // Response for the root URL
+  res.send("Hello, World!");
+});
+
+// Error handling middleware for Multer
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(500).json({ message: err.message });
+  }
+  next(err);
 });
 
 // Start the server with SSL
