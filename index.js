@@ -51,7 +51,7 @@ app.post("/Documents", uploadDocuments.single("image"), (req, res) => {
     return res.status(400).send("No file uploaded.");
   }
   const filePath = path.join("Documents", req.file.filename); // Get the file path
-  res.json({ path: `http://localhost:${PORT}/${filePath}` }); // Return the file path as JSON
+  res.json({ path: `${filePath}` }); // Return the file path as JSON
 });
 
 app.post("/Birth_Certificate", uploadBirthCertificates.single("image"), (req, res) => {
@@ -59,7 +59,7 @@ app.post("/Birth_Certificate", uploadBirthCertificates.single("image"), (req, re
     return res.status(400).send("No file uploaded.");
   }
   const filePath = path.join("Birth_Certificate", req.file.filename); // Get the file path
-  res.json({ path: `http://localhost:${PORT}/${filePath}` }); // Return the file path as JSON
+  res.json({ path: `${filePath}` }); // Return the file path as JSON
 });
 
 app.post("/National_ID", uploadNationalIDs.single("image"), (req, res) => {
@@ -67,7 +67,7 @@ app.post("/National_ID", uploadNationalIDs.single("image"), (req, res) => {
     return res.status(400).send("No file uploaded.");
   }
   const filePath = path.join("National_ID", req.file.filename); // Get the file path
-  res.json({ path: `http://localhost:${PORT}/${filePath}` }); // Return the file path as JSON
+  res.json({ path: `${filePath}` }); // Return the file path as JSON
 });
 
 app.post("/Results", uploadResults.single("image"), (req, res) => {
@@ -75,7 +75,7 @@ app.post("/Results", uploadResults.single("image"), (req, res) => {
     return res.status(400).send("No file uploaded.");
   }
   const filePath = path.join("Results", req.file.filename); // Get the file path
-  res.json({ path: `http://localhost:${PORT}/${filePath}` }); // Return the file path as JSON
+  res.json({ path: `${filePath}` }); // Return the file path as JSON
 });
 
 // Define a route for testing
