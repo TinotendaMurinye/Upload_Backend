@@ -43,7 +43,7 @@ app.post("/uploads", upload.single("image"), (req, res) => {
     return res.status(400).send("No file uploaded.");
   }
   const filePath = path.join("uploads", req.file.filename); // Get the file path
-  res.json({ path: `http://localhost:${PORT}/${filePath}` }); // Return the file path as JSON
+  res.json({ path: `${filePath}` }); // Return the file path as JSON
 });
 
 app.post("/Documents", uploadDocuments.single("image"), (req, res) => {
