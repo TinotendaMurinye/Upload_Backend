@@ -4,10 +4,15 @@ const path = require("path"); // Import path
 const fs = require("fs"); // Import fs
 const cors = require("cors"); // Import cors
 const https = require("https"); // Import https
-const http = require("http"); // Import http
 
 const app = express(); // Create an instance of express
 const PORT = process.env.PORT || 3001; // Set port
+
+// SSL options using Let's Encrypt certificates
+const sslOptions = {
+  key: fs.readFileSync('/etc/letsencrypt/live/srv690692.hstgr.cloud/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/srv690692.hstgr.cloud/fullchain.pem'),
+};
 
 // Use CORS middleware
 app.use(cors()); // Enable all CORS requests
@@ -48,56 +53,14 @@ app.post("/uploads", upload.single("image"), (req, res) => {
   res.json({ path: `${filePath}` }); // Return the file path as JSON
 });
 
-app.post("/Documents", uploadDocuments.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
-  }
-  const filePath = path.join("Documents", req.file.filename); // Get the file path
-  res.json({ path: `${filePath}` }); // Return the file path as JSON
-});
-
-app.post("/Birth_Certificate", uploadBirthCertificates.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
-  }
-  const filePath = path.join("Birth_Certificate", req.file.filename); // Get the file path
-  res.json({ path: `${filePath}` }); // Return the file path as JSON
-});
-
-app.post("/National_ID", uploadNationalIDs.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
-  }
-  const filePath = path.join("National_ID", req.file.filename); // Get the file path
-  res.json({ path: `${filePath}` }); // Return the file path as JSON
-});
-
-app.post("/Results", uploadResults.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
-  }
-  const filePath = path.join("Results", req.file.filename); // Get the file path
-  res.json({ path: `${filePath}` }); // Return the file path as JSON
-});
+// Other upload routes...
 
 // Define a route for testing
 app.get("/", (req, res) => {
   res.send("Hello, World!"); // Response for the root URL
 });
 
-// SSL options
-const sslOptions = {
-  key: fs.readFileSync('/etc/letsencrypt/live/srv690692.hstgr.cloud/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/srv690692.hstgr.cloud/fullchain.pem'),
-};
-
-// Start the HTTPS server
+// Start the server with SSL
 https.createServer(sslOptions, app).listen(PORT, () => {
-  console.log(`Server is running on https://srv690692.hstgr.cloud:${PORT}`);
+  console.log(`Server is running on https://localhost:${PORT}`);
 });
-
-// Optional: Redirect HTTP to HTTPS
-http.createServer((req, res) => {
-  res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
-  res.end();
-}).listen(80);
