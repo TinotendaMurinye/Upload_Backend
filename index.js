@@ -87,13 +87,13 @@ app.get("/", (req, res) => {
 
 // SSL options
 const sslOptions = {
-  key: fs.readFileSync('/etc/letsencrypt/live/your_domain.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/your_domain.com/fullchain.pem'),
+  key: fs.readFileSync('/etc/letsencrypt/live/srv690692.hstgr.cloud/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/srv690692.hstgr.cloud/fullchain.pem'),
 };
 
 // Start the HTTPS server
 https.createServer(sslOptions, app).listen(PORT, () => {
-  console.log(`Server is running on https://your_domain.com:${PORT}`);
+  console.log(`Server is running on https://srv690692.hstgr.cloud:${PORT}`);
 });
 
 // Optional: Redirect HTTP to HTTPS
