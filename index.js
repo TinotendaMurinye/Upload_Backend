@@ -3,6 +3,8 @@ const multer = require("multer"); // Import multer
 const path = require("path"); // Import path
 const fs = require("fs"); // Import fs
 const cors = require("cors"); // Import cors
+const https = require("https"); // Import https
+const http = require("http"); // Import http
 
 const app = express(); // Create an instance of express
 const PORT = process.env.PORT || 3001; // Set port
@@ -83,7 +85,19 @@ app.get("/", (req, res) => {
   res.send("Hello, World!"); // Response for the root URL
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// SSL options
+const sslOptions = {
+  key: fs.readFileSync('/etc/letsencrypt/live/your_domain.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/your_domain.com/fullchain.pem'),
+};
+
+// Start the HTTPS server
+https.createServer(sslOptions, app).listen(PORT, () => {
+  console.log(`Server is running on https://your_domain.com:${PORT}`);
 });
+
+// Optional: Redirect HTTP to HTTPS
+http.createServer((req, res) => {
+  res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+  res.end();
+}).listen(80);
